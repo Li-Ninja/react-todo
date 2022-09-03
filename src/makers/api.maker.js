@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-
 const api = axios.create({
   baseURL: 'https://todoo.5xcamp.us/',
   timeout: 1000,
-  headers: {'X-Custom-Header': 'foobar'}
+  headers: { 'X-Custom-Header': 'foobar' }
 });
 
 const getApi = (url, postData) => api.get(url, postData);
