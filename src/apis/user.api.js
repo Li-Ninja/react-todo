@@ -20,7 +20,16 @@ function postUser(postData) {
     });
 }
 
+function postSignIn(postData) {
+  return postApi('users/sign_in', postData)
+    .then((res) => res)
+    .catch((err) => {
+      errorNotify(err.message);
+    });
+}
+
 export {
   getCheck,
-  postUser
+  postUser,
+  postSignIn
 };

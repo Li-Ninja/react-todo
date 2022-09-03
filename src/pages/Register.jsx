@@ -1,11 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { postUser } from '../apis/user.api';
 import { email, password, required } from '../makers/rule.maker';
 import { successNotify } from '../makers/notify.maker';
 
 export default function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
 
   function submit() {
     const onValid = async (data) => {
@@ -22,6 +24,10 @@ export default function Register() {
     const onInvalid = () => ({});
 
     return handleSubmit(onValid, onInvalid);
+  }
+
+  function goToLoginPage() {
+    navigate('/Login');
   }
 
   return (
@@ -104,6 +110,14 @@ export default function Register() {
           />
         </div>
       </form>
+      <div>
+        <input
+          type="submit"
+          style={{ display: 'block' }}
+          value="登入"
+          onClick={() => goToLoginPage()}
+        />
+      </div>
     </div>
   );
 }
