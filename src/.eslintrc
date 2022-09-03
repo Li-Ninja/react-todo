@@ -4,5 +4,8 @@
     "plugin:react/recommended",
     "airbnb",
     "airbnb/hooks"
-  ]
+  ],
+  "rules": {
+    "comma-dangle": ["error", "never"]
+  }
 }
