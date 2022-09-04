@@ -547,7 +547,7 @@ nav ul a span {
   margin-top: 16px;
   width: 240px;
   height: 251px;
-  background: url('../public/empty.png') no-repeat;
+  background: url('./assets/images/empty.png') no-repeat;
   display: block;
   text-indent: 101%;
   overflow: hidden;
