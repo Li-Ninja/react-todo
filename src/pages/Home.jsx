@@ -7,6 +7,7 @@ import {
 } from '../apis/todo.api';
 import { notify, successNotify } from '../makers/notify.maker';
 import TodoList from '../components/TodoList';
+import TodoEmpty from '../components/TodoEmpty';
 import { PageTypeEnum } from '../const';
 
 export default function Home() {
@@ -103,46 +104,53 @@ export default function Home() {
                 <i className="fa fa-plus" />
               </a>
             </div>
-            <div className="todoList_list">
-              <ul className="todoList_tab">
-                <li>
-                  <a
-                    href="#"
-                    className={pageType === PageTypeEnum.All ? 'active' : ''}
-                    onClick={changePageType(PageTypeEnum.All)}
-                  >
-                    全部
-                  </a>
+            {
+              todoList.length === 0
+                ? <TodoEmpty />
+                : (
+                  <div className="todoList_list">
+                    <ul className="todoList_tab">
+                      <li>
+                        <a
+                          href="#"
+                          className={pageType === PageTypeEnum.All ? 'active' : ''}
+                          onClick={changePageType(PageTypeEnum.All)}
+                        >
+                          全部
+                        </a>
 
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className={pageType === PageTypeEnum.NotComplete ? 'active' : ''}
-                    onClick={changePageType(PageTypeEnum.NotComplete)}
-                  >
-                    待完成
-                  </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className={pageType === PageTypeEnum.NotComplete ? 'active' : ''}
+                          onClick={changePageType(PageTypeEnum.NotComplete)}
+                        >
+                          待完成
+                        </a>
 
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className={pageType === PageTypeEnum.Complete ? 'active' : ''}
-                    onClick={changePageType(PageTypeEnum.Complete)}
-                  >
-                    已完成
-                  </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className={pageType === PageTypeEnum.Complete ? 'active' : ''}
+                          onClick={changePageType(PageTypeEnum.Complete)}
+                        >
+                          已完成
+                        </a>
 
-                </li>
-              </ul>
-              <TodoList
-                getTodo={getTodo}
-                getFilterList={getFilterList}
-                pageType={pageType}
-                list={beFilterTodoList}
-              />
-            </div>
+                      </li>
+                    </ul>
+
+                    <TodoList
+                      getTodo={getTodo}
+                      getFilterList={getFilterList}
+                      pageType={pageType}
+                      list={beFilterTodoList}
+                    />
+                  </div>
+                )
+            }
           </div>
         </div>
       </div>

@@ -527,3 +527,29 @@ nav ul a span {
   font-size: 0.875rem;
   text-decoration: none;
 }
+
+.todoEmpty {
+  margin-top: 60px;
+}
+
+.todoEmpty .title {
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+.todoEmpty .imageContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.todoEmpty .imageContainer .image {
+  margin-top: 16px;
+  width: 240px;
+  height: 251px;
+  background: url('../public/empty.png') no-repeat;
+  display: block;
+  text-indent: 101%;
+  overflow: hidden;
+  white-space: nowrap;
+}
