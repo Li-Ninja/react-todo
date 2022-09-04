@@ -1,6 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { deleteTodo, fetchTodo, postTodo } from '../apis/todo.api';
+import {
+  deleteTodo,
+  fetchTodo,
+  postTodo,
+  postTodoToggle
+} from '../apis/todo.api';
 import { notify, successNotify } from '../makers/notify.maker';
 
 export default function Home() {
@@ -60,6 +65,25 @@ export default function Home() {
     };
   }
 
+  function handleToggle(id, isComplete) {
+    return (e) => {
+      e.preventDefault();
+      postTodoToggle(id).then((res) => {
+        if (isComplete) {
+          successNotify(`已完成 ${res.content}`);
+        } else {
+          successNotify(`待完成 ${res.content}`);
+        }
+
+        getTodo();
+      });
+    };
+  }
+
+  function getCompleteCount() {
+    return todoList.filter((todo) => todo.completed_at).length;
+  }
+
   return (
     <div>
       <div id="todoListPage" className="bg-half">
@@ -103,6 +127,8 @@ export default function Home() {
                           className="todoList_input"
                           type="checkbox"
                           value="true"
+                          checked={!!todo.completed_at}
+                          onChange={handleToggle(todo.id, !todo.completed_at)}
                         />
                         <span>{todo.content}</span>
                       </label>
@@ -116,7 +142,9 @@ export default function Home() {
                   ))}
                 </ul>
                 <div className="todoList_statistics">
-                  <p> 5 個已完成項目</p>
+                  <p>
+                    { `${getCompleteCount()} 個已完成項目` }
+                  </p>
                   <a href="#link">清除已完成項目</a>
                 </div>
               </div>

@@ -1,4 +1,9 @@
-import { deleteApi, getApi, postApi } from '../makers/api.maker';
+import {
+  deleteApi,
+  getApi,
+  postApi,
+  patchApi
+} from '../makers/api.maker';
 import { errorNotify } from '../makers/notify.maker';
 
 function fetchTodo() {
@@ -31,8 +36,20 @@ function deleteTodo(id) {
     });
 }
 
+function postTodoToggle(id) {
+  return patchApi(`todos/${id}/toggle`)
+    .then((res) => res.data)
+    .catch((err) => {
+      const { data } = err.response;
+
+      errorNotify(err.response.data.message);
+      data.error.forEach((item) => errorNotify(item));
+    });
+}
+
 export {
   deleteTodo,
   fetchTodo,
-  postTodo
+  postTodo,
+  postTodoToggle
 };
