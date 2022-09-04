@@ -6,10 +6,22 @@ const api = axios.create({
   headers: { 'X-Custom-Header': 'foobar' }
 });
 
+function requestHandler(request) {
+  const accessToken = localStorage.getItem('token');
+
+  if (accessToken) {
+    request.headers.Authorization = `${accessToken}`;
+  }
+
+  return request;
+}
+
+api.interceptors.request.use(requestHandler);
+
 const getApi = (url, postData) => api.get(url, postData);
 const postApi = (url, postData) => api.post(url, postData);
-const putApi = (url, postData) => api.put(url, postData);
-const deleteApi = (url, postData) => api.delete(url, postData);
+const putApi = (url) => api.put(url);
+const deleteApi = (url) => api.delete(url);
 const patchApi = (url, postData) => api.patch(url, postData);
 
 export {

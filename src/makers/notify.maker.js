@@ -8,3 +8,7 @@ export const successNotify = (message) => {
 export const errorNotify = (message) => {
   alert(message);
 };
+
+export const notify = (message) => {
+  alert(message);
+};
