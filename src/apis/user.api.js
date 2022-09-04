@@ -5,7 +5,7 @@ function getCheck() {
   return getApi('check')
     .then((res) => res.data)
     .catch((err) => {
-      errorNotify(err.response.data.message);
+      errorNotify(`${err.response.data.message}，請重新登入帳號`);
     });
 }
 
