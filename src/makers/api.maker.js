@@ -21,7 +21,7 @@ api.interceptors.request.use(requestHandler);
 const getApi = (url, postData) => api.get(url, postData);
 const postApi = (url, postData) => api.post(url, postData);
 const putApi = (url, postData) => api.put(url, postData);
-const deleteApi = (url, postData) => api.delete(url, postData);
+const deleteApi = (url) => api.delete(url);
 const patchApi = (url, postData) => api.patch(url, postData);
 
 export {

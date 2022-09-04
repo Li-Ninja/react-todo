@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { fetchTodo, postTodo } from '../apis/todo.api';
+import { deleteTodo, fetchTodo, postTodo } from '../apis/todo.api';
 import { notify, successNotify } from '../makers/notify.maker';
 
 export default function Home() {
@@ -44,6 +44,20 @@ export default function Home() {
     }
 
     return addTodo(content);
+  }
+
+  function removeTodo(id) {
+    deleteTodo(id).then((res) => {
+      successNotify(res.message);
+      getTodo();
+    });
+  }
+
+  function handleRemove(id) {
+    return (e) => {
+      e.preventDefault();
+      removeTodo(id);
+    };
   }
 
   return (
@@ -92,7 +106,10 @@ export default function Home() {
                         />
                         <span>{todo.content}</span>
                       </label>
-                      <a href="#link">
+                      <a
+                        href="#link"
+                        onClick={handleRemove(todo.id)}
+                      >
                         <i className="fa fa-times" />
                       </a>
                     </li>
