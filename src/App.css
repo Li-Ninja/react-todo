@@ -553,3 +553,28 @@ nav ul a span {
   overflow: hidden;
   white-space: nowrap;
 }
+
+.notFoundPage {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.notFoundPage .imageContainer {
+  width: 600px;
+  height: 300px;
+}
+
+.notFoundPage .imageContainer .image {
+  margin-top: 16px;
+  margin-left: 40px;
+  width: 100%;
+  height: 100%;
+  background: url('./assets/images/not_found.png') no-repeat;
+  background-size: contain;
+  text-indent: 101%;
+  overflow: hidden;
+  white-space: nowrap;
+}

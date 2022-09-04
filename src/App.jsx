@@ -8,6 +8,7 @@ import {
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import NotFound from './pages/NotFound';
 import AuthRoute from './components/AuthRoute';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route element={<AuthRoute />}>
             <Route path="/" element={<Home nickname={nickname} />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>
     </div>
