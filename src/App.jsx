@@ -8,17 +8,21 @@ import {
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import AuthRoute from './components/AuthRoute';
 
 function App() {
-  const [nickname, setNickname] = React.useState('');
+  const { useState } = React;
+  const [nickname, setNickname] = useState('');
 
   return (
     <div>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Home nickname={nickname} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login setNickname={setNickname} />} />
+          <Route element={<AuthRoute />}>
+            <Route path="/" element={<Home nickname={nickname} />} />
+          </Route>
         </Routes>
       </HashRouter>
     </div>
