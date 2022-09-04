@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -5,8 +6,9 @@ import { postSignIn } from '../apis/user.api';
 import { email, password, required } from '../makers/rule.maker';
 import { successNotify } from '../makers/notify.maker';
 
-export default function Login() {
+export default function Login(props) {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const { setNickname } = props;
   const navigate = useNavigate();
 
   function submit() {
@@ -17,7 +19,7 @@ export default function Login() {
 
       postSignIn(postData).then((res) => {
         localStorage.setItem('token', res.headers.authorization);
-
+        setNickname(res.data.nickname);
         successNotify(res.data.message);
         navigate('/');
       });

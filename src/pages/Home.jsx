@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
@@ -12,8 +13,9 @@ import TodoList from '../components/TodoList';
 import TodoEmpty from '../components/TodoEmpty';
 import { PageTypeEnum } from '../const';
 
-export default function Home() {
+export default function Home(props) {
   const { useEffect, useState } = React;
+  const { nickname } = props;
   const navigate = useNavigate();
   const [todoList, setTodoList] = useState([]);
   const [beFilterTodoList, setBeFilterTodoList] = useState([]);
@@ -98,7 +100,7 @@ export default function Home() {
         <nav>
           <h1><a href="#">ONLINE TODO LIST</a></h1>
           <ul>
-            <li className="todo_sm"><a href="#"><span>王小明的代辦</span></a></li>
+            <li className="todo_sm"><a href="#"><span>{`${nickname} 的代辦`}</span></a></li>
             <li>
               <a
                 href="#"
