@@ -8,9 +8,40 @@ import {
 } from '../apis/todo.api';
 import { notify, successNotify } from '../makers/notify.maker';
 
+const PageTypeEnum = Object.freeze(
+  { All: 'All', Complete: 'Complete', NotComplete: 'NotComplete' }
+);
+
 export default function Home() {
   const { useEffect, useState } = React;
   const [todoList, setTodoList] = useState([]);
+  const [beFilterTodoList, setBeFilterTodoList] = useState([]);
+  const [pageType, setPageType] = useState(PageTypeEnum.All);
+
+  function getFilterList(type) {
+    switch (type) {
+      case PageTypeEnum.Complete:
+        return todoList.filter((todo) => todo.completed_at);
+
+      case PageTypeEnum.NotComplete:
+        return todoList.filter((todo) => !todo.completed_at);
+      default:
+        return todoList;
+    }
+  }
+
+  useEffect(() => {
+    setBeFilterTodoList(getFilterList(pageType));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todoList, pageType]);
+
+  function changePageType(type) {
+    // TODO click once to but it will execute three times
+    return (e) => {
+      e.preventDefault();
+      setPageType(type);
+    };
+  }
 
   function getTodo() {
     fetchTodo().then((res) => {
@@ -81,15 +112,14 @@ export default function Home() {
   }
 
   function getCompleteCount() {
-    return todoList.filter((todo) => todo.completed_at).length;
+    return getFilterList(PageTypeEnum.Complete).length;
   }
 
   function deleteAllCompleteTodo() {
     return new Promise((resolve) => {
-      const completeTodoList = todoList.filter((todo) => todo.completed_at);
+      const completeTodoList = getFilterList(PageTypeEnum.Complete);
 
       completeTodoList.forEach((todo) => {
-        console.log('completeTodoList');
         deleteTodo(todo.id);
       });
 
@@ -116,9 +146,9 @@ export default function Home() {
     <div>
       <div id="todoListPage" className="bg-half">
         <nav>
-          <h1><a href="#link">ONLINE TODO LIST</a></h1>
+          <h1><a href="#">ONLINE TODO LIST</a></h1>
           <ul>
-            <li className="todo_sm"><a href="#link"><span>王小明的代辦</span></a></li>
+            <li className="todo_sm"><a href="#"><span>王小明的代辦</span></a></li>
             <li><a href="#loginPage">登出</a></li>
           </ul>
         </nav>
@@ -130,7 +160,7 @@ export default function Home() {
                 placeholder="請輸入待辦事項"
               />
               <a
-                href="#link"
+                href="#"
                 onClick={handleAdd}
               >
                 <i className="fa fa-plus" />
@@ -138,13 +168,40 @@ export default function Home() {
             </div>
             <div className="todoList_list">
               <ul className="todoList_tab">
-                <li><a href="#link" className="active">全部</a></li>
-                <li><a href="#link">待完成</a></li>
-                <li><a href="#link">已完成</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className={pageType === PageTypeEnum.All ? 'active' : ''}
+                    onClick={changePageType(PageTypeEnum.All)}
+                  >
+                    全部
+                  </a>
+
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className={pageType === PageTypeEnum.NotComplete ? 'active' : ''}
+                    onClick={changePageType(PageTypeEnum.NotComplete)}
+                  >
+                    待完成
+                  </a>
+
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className={pageType === PageTypeEnum.Complete ? 'active' : ''}
+                    onClick={changePageType(PageTypeEnum.Complete)}
+                  >
+                    已完成
+                  </a>
+
+                </li>
               </ul>
               <div className="todoList_items">
                 <ul className="todoList_item">
-                  {todoList.map((todo) => (
+                  {beFilterTodoList.map((todo) => (
                     <li key={todo.id}>
                       <label
                         htmlFor={todo.id}
@@ -161,7 +218,7 @@ export default function Home() {
                         <span>{todo.content}</span>
                       </label>
                       <a
-                        href="#link"
+                        href="#"
                         onClick={handleRemove(todo.id)}
                       >
                         <i className="fa fa-times" />
@@ -169,16 +226,18 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <div className="todoList_statistics">
+                <div
+                  className="todoList_statistics"
+                  style={{ display: pageType !== PageTypeEnum.All ? 'none' : '' }}
+                >
                   <p>
                     { `${getCompleteCount()} 個已完成項目` }
                   </p>
                   <a
-                    href="#link"
+                    href="#"
                     onClick={handleDeleteAllCompleteTodo}
                   >
                     清除已完成項目
-
                   </a>
                 </div>
               </div>
