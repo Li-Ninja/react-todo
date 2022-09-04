@@ -6,6 +6,18 @@ const api = axios.create({
   headers: { 'X-Custom-Header': 'foobar' }
 });
 
+function requestHandler(request) {
+  const accessToken = localStorage.getItem('token');
+
+  if (accessToken) {
+    request.headers.Authorization = `${accessToken}`;
+  }
+
+  return request;
+}
+
+api.interceptors.request.use(requestHandler);
+
 const getApi = (url, postData) => api.get(url, postData);
 const postApi = (url, postData) => api.post(url, postData);
 const putApi = (url, postData) => api.put(url, postData);

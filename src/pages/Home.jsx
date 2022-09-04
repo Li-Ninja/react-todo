@@ -1,32 +1,51 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
+import { fetchTodo, postTodo } from '../apis/todo.api';
+import { notify, successNotify } from '../makers/notify.maker';
 
 export default function Home() {
-  const todoList = [
-    {
-      id: 0,
-      content: '把冰箱發霉的檸檬拿去丟'
-    },
-    {
-      id: 1,
-      content: '打電話叫媽媽匯款給我'
-    },
-    {
-      id: 2,
-      content: '整理電腦資料夾'
-    },
-    {
-      id: 3,
-      content: '繳電費水費瓦斯費'
-    },
-    {
-      id: 4,
-      content: '約vicky禮拜三泡溫泉'
-    },
-    {
-      id: 5,
-      content: '約ada禮拜四吃晚餐'
+  const { useEffect, useState } = React;
+  const [todoList, setTodoList] = useState([]);
+
+  function getTodo() {
+    fetchTodo().then((res) => {
+      const { todos } = res;
+
+      setTodoList(todos);
+    });
+  }
+
+  useEffect(() => {
+    getTodo();
+  }, []);
+
+  function addTodo(content) {
+    const postData = {
+      todo: {
+        content
+      }
+    };
+
+    postTodo(postData).then((res) => {
+      successNotify(`新增成功，${res.content}`);
+
+      document.getElementById('add-content').value = '';
+      getTodo();
+    });
+  }
+
+  function handleAdd(e) {
+    e.preventDefault();
+
+    const content = document.getElementById('add-content').value;
+
+    if (!content) {
+      return notify('請輸入代辦事項');
     }
-  ];
+
+    return addTodo(content);
+  }
+
   return (
     <div>
       <div id="todoListPage" className="bg-half">
@@ -40,8 +59,14 @@ export default function Home() {
         <div className="conatiner todoListPage vhContainer">
           <div className="todoList_Content">
             <div className="inputBox">
-              <input type="text" placeholder="請輸入待辦事項" />
-              <a href="#link">
+              <input
+                id="add-content"
+                placeholder="請輸入待辦事項"
+              />
+              <a
+                href="#link"
+                onClick={handleAdd}
+              >
                 <i className="fa fa-plus" />
               </a>
             </div>
