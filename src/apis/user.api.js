@@ -1,4 +1,4 @@
-import { getApi, postApi } from '../makers/api.maker';
+import { deleteApi, getApi, postApi } from '../makers/api.maker';
 import { errorNotify } from '../makers/notify.maker';
 
 function getCheck() {
@@ -28,8 +28,17 @@ function postSignIn(postData) {
     });
 }
 
+function logout() {
+  return deleteApi('users/sign_out')
+    .then((res) => res)
+    .catch((err) => {
+      errorNotify(err.response.data.message);
+    });
+}
+
 export {
   getCheck,
+  logout,
   postUser,
   postSignIn
 };

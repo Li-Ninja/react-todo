@@ -1,10 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   fetchTodo,
   postTodo
 } from '../apis/todo.api';
+import { logout } from '../apis/user.api';
 import { notify, successNotify } from '../makers/notify.maker';
 import TodoList from '../components/TodoList';
 import TodoEmpty from '../components/TodoEmpty';
@@ -12,9 +14,19 @@ import { PageTypeEnum } from '../const';
 
 export default function Home() {
   const { useEffect, useState } = React;
+  const navigate = useNavigate();
   const [todoList, setTodoList] = useState([]);
   const [beFilterTodoList, setBeFilterTodoList] = useState([]);
   const [pageType, setPageType] = useState(PageTypeEnum.All);
+
+  function handleLogout(e) {
+    e.preventDefault();
+
+    logout().then(() => {
+      navigate('/Login');
+      localStorage.setItem('token', '');
+    });
+  }
 
   function getFilterList(type) {
     switch (type) {
@@ -87,7 +99,15 @@ export default function Home() {
           <h1><a href="#">ONLINE TODO LIST</a></h1>
           <ul>
             <li className="todo_sm"><a href="#"><span>王小明的代辦</span></a></li>
-            <li><a href="#loginPage">登出</a></li>
+            <li>
+              <a
+                href="#"
+                onClick={handleLogout}
+              >
+                登出
+              </a>
+
+            </li>
           </ul>
         </nav>
         <div className="container todoListPage vhContainer">
