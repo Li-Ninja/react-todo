@@ -84,6 +84,34 @@ export default function Home() {
     return todoList.filter((todo) => todo.completed_at).length;
   }
 
+  function deleteAllCompleteTodo() {
+    return new Promise((resolve) => {
+      const completeTodoList = todoList.filter((todo) => todo.completed_at);
+
+      completeTodoList.forEach((todo) => {
+        console.log('completeTodoList');
+        deleteTodo(todo.id);
+      });
+
+      resolve('');
+    });
+  }
+
+  function handleDeleteAllCompleteTodo(e) {
+    e.preventDefault();
+
+    // TODO
+    /** when then is happen, the deleteTodo not yet, but I wish it is be deleted,
+     * use setTimeout temporarily
+    */
+    deleteAllCompleteTodo().then(() => {
+      setTimeout(() => {
+        successNotify('清除成功');
+        getTodo();
+      }, 1000);
+    });
+  }
+
   return (
     <div>
       <div id="todoListPage" className="bg-half">
@@ -145,7 +173,13 @@ export default function Home() {
                   <p>
                     { `${getCompleteCount()} 個已完成項目` }
                   </p>
-                  <a href="#link">清除已完成項目</a>
+                  <a
+                    href="#link"
+                    onClick={handleDeleteAllCompleteTodo}
+                  >
+                    清除已完成項目
+
+                  </a>
                 </div>
               </div>
             </div>
