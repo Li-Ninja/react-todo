@@ -146,7 +146,7 @@ nav {
 nav h1 a {
   width: 243px;
   height: 39px;
-  background: url('../public/online_todo_list.png') no-repeat;
+  background: url('./assets/images/online_todo_list.png') no-repeat;
   display: block;
   text-indent: 101%;
   overflow: hidden;
