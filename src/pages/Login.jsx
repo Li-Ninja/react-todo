@@ -16,7 +16,6 @@ export default function Login() {
       };
 
       postSignIn(postData).then((res) => {
-        // eslint-disable-next-line no-undef
         localStorage.setItem('token', res.headers.authorization);
 
         successNotify(res.data.message);

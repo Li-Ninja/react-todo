@@ -9,5 +9,10 @@
   "rules": {
     "comma-dangle": ["error", "never"],
     "react/jsx-props-no-spreading": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
   }
 }
