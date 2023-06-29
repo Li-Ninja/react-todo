@@ -1,45 +1,46 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React from 'react';
-import {
-  deleteTodo,
-  postTodoToggle
-} from '../apis/todo.api';
+import { useDispatch } from 'react-redux';
 import { successNotify } from '../makers/notify.maker';
 import { PageTypeEnum } from '../const';
+import {
+  deleteTodoAsync,
+  getTodoAsync,
+  postTodoToggleAsync
+} from '../slices/todoListSlice';
 
 export default function TodoList(props) {
   // eslint-disable-next-line react/prop-types
   const {
-    getTodo, getFilterList, list, pageType
+    getFilterList, list, pageType
   } = props;
-
-  function removeTodo(id) {
-    deleteTodo(id).then((res) => {
-      successNotify(res.message);
-      getTodo();
-    });
-  }
+  const dispatch = useDispatch();
 
   function handleRemove(id) {
-    return (e) => {
+    return async (e) => {
       e.preventDefault();
-      removeTodo(id);
+
+      const { payload } = await dispatch(deleteTodoAsync(id));
+
+      successNotify(payload.message);
+      dispatch(getTodoAsync());
     };
   }
 
   function handleToggle(id, isComplete) {
-    return (e) => {
+    return async (e) => {
       e.preventDefault();
-      postTodoToggle(id).then((res) => {
-        if (isComplete) {
-          successNotify(`已完成 ${res.content}`);
-        } else {
-          successNotify(`待完成 ${res.content}`);
-        }
 
-        getTodo();
-      });
+      const { payload } = await dispatch(postTodoToggleAsync(id));
+
+      if (isComplete) {
+        successNotify(`已完成 ${payload.content}`);
+      } else {
+        successNotify(`待完成 ${payload.content}`);
+      }
+
+      dispatch(getTodoAsync());
     };
   }
 
@@ -47,31 +48,18 @@ export default function TodoList(props) {
     return getFilterList(PageTypeEnum.Complete).length;
   }
 
-  function deleteAllCompleteTodo() {
-    return new Promise((resolve) => {
-      const completeTodoList = getFilterList(PageTypeEnum.Complete);
-
-      completeTodoList.forEach((todo) => {
-        deleteTodo(todo.id);
-      });
-
-      resolve('');
-    });
-  }
-
-  function handleDeleteAllCompleteTodo(e) {
+  async function handleDeleteAllCompleteTodo(e) {
     e.preventDefault();
 
-    // TODO
-    /** when then is happen, the deleteTodo not yet, but I wish it is be deleted,
-     * use setTimeout temporarily
-    */
-    deleteAllCompleteTodo().then(() => {
-      setTimeout(() => {
-        successNotify('清除成功');
-        getTodo();
-      }, 1000);
-    });
+    const completeTodoList = getFilterList(PageTypeEnum.Complete);
+
+    await Promise.all(completeTodoList.map(async (todo) => {
+      await dispatch(deleteTodoAsync(todo.id));
+    }));
+
+    await dispatch(getTodoAsync());
+
+    successNotify('清除成功');
   }
   return (
     <div className="todoList_items">
