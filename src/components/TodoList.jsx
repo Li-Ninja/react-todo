@@ -48,31 +48,18 @@ export default function TodoList(props) {
     return getFilterList(PageTypeEnum.Complete).length;
   }
 
-  function deleteAllCompleteTodo() {
-    return new Promise((resolve) => {
-      const completeTodoList = getFilterList(PageTypeEnum.Complete);
-
-      completeTodoList.forEach(async (todo) => {
-        await dispatch(deleteTodoAsync(todo.id));
-      });
-
-      resolve('');
-    });
-  }
-
-  function handleDeleteAllCompleteTodo(e) {
+  async function handleDeleteAllCompleteTodo(e) {
     e.preventDefault();
 
-    // TODO
-    /** when then is happen, the deleteTodo not yet, but I wish it is be deleted,
-     * use setTimeout temporarily
-    */
-    deleteAllCompleteTodo().then(() => {
-      setTimeout(async () => {
-        successNotify('清除成功');
-        await dispatch(getTodoAsync());
-      }, 1000);
-    });
+    const completeTodoList = getFilterList(PageTypeEnum.Complete);
+
+    await Promise.all(completeTodoList.map(async (todo) => {
+      await dispatch(deleteTodoAsync(todo.id));
+    }));
+
+    await dispatch(getTodoAsync());
+
+    successNotify('清除成功');
   }
   return (
     <div className="todoList_items">
