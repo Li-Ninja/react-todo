@@ -4,9 +4,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  fetchTodo,
-  postTodo
-} from '../apis/todo.api';
+  useDispatch,
+  useSelector
+} from 'react-redux';
+import { getTodoAsync, addTodoAsync } from '../slices/todoListSlice';
 import { logout } from '../apis/user.api';
 import { notify, successNotify } from '../makers/notify.maker';
 import TodoList from '../components/TodoList';
@@ -15,11 +16,12 @@ import { PageTypeEnum } from '../const';
 
 export default function Home(props) {
   const { useEffect, useState } = React;
+  const dispatch = useDispatch();
   const { nickname } = props;
   const navigate = useNavigate();
-  const [todoList, setTodoList] = useState([]);
   const [beFilterTodoList, setBeFilterTodoList] = useState([]);
   const [pageType, setPageType] = useState(PageTypeEnum.All);
+  const todoList = useSelector((state) => state.todoList);
 
   function handleLogout(e) {
     e.preventDefault();
@@ -55,34 +57,11 @@ export default function Home(props) {
     };
   }
 
-  function getTodo() {
-    fetchTodo().then((res) => {
-      const { todos } = res;
-
-      setTodoList(todos);
-    });
-  }
-
   useEffect(() => {
-    getTodo();
-  }, []);
+    dispatch(getTodoAsync());
+  }, [dispatch]);
 
-  function addTodo(content) {
-    const postData = {
-      todo: {
-        content
-      }
-    };
-
-    postTodo(postData).then((res) => {
-      successNotify(`新增成功，${res.content}`);
-
-      document.getElementById('add-content').value = '';
-      getTodo();
-    });
-  }
-
-  function handleAdd(e) {
+  async function handleAdd(e) {
     e.preventDefault();
 
     const content = document.getElementById('add-content').value;
@@ -91,7 +70,11 @@ export default function Home(props) {
       return notify('請輸入代辦事項');
     }
 
-    return addTodo(content);
+    const { payload } = await dispatch(addTodoAsync(content));
+
+    document.getElementById('add-content').value = '';
+    successNotify(`新增成功，${payload.content}`);
+    dispatch(getTodoAsync());
   }
 
   return (
@@ -165,7 +148,6 @@ export default function Home(props) {
                     </ul>
 
                     <TodoList
-                      getTodo={getTodo}
                       getFilterList={getFilterList}
                       pageType={pageType}
                       list={beFilterTodoList}
